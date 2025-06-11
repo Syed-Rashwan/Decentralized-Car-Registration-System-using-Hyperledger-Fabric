@@ -1,0 +1,43 @@
+{
+    "name": "car-registry-network",
+    "version": "1.0.0",
+    "client": {
+        "organization": "Forty4",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "Forty4": {
+            "mspid": "Forty4MSP",
+            "peers": [
+                "peer0.Forty4.com"
+            ],
+            "certificateAuthorities": [
+                "ca.Forty4.com"
+            ]
+        }
+    },
+    "peers": {
+        "peer0.Forty4.com": {
+            "url": "grpc://localhost:7051",
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.Forty4.com",
+                "hostnameOverride": "peer0.Forty4.com"
+            }
+        }
+    },
+    "certificateAuthorities": {
+        "ca.Forty4.com": {
+            "url": "http://localhost:7054",
+            "caName": "ca-org1",
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}

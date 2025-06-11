@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Car Details</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        p {
+            margin-bottom: 10px;
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Car Details</h1>
+    <p><strong>Car ID:</strong> {{ car.Key }}</p>
+    <p><strong>Model:</strong> {{ car.Record.model }}</p>
+    <p><strong>Owner:</strong> {{ car.Record.owner }}</p>
+    <a href="/cars">View All Cars</a>
+</body>
+</html>

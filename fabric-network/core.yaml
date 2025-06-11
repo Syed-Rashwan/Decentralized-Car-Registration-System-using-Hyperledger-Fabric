@@ -1,0 +1,27 @@
+logging:
+  level: info
+  format: "%{color}%{time:15:04:05.000} %{shortfunc} ▶ %{level:.4s} %{id:03x} %{message}"
+  logSpec: ""
+
+#-- Orderer --
+orderer:
+  address: orderer.example.com:7050
+
+# -- Peer --
+peer:
+  id: peer0.org1.example.com
+  address: peer0.org1.example.com:7051
+  localMspId: Org1MSP
+  mspConfigPath: /etc/hyperledger/fabric/msp
+  fileSystemPath: /var/hyperledger/production
+  gossip:
+    bootstrap: peer0.org1.example.com:7051
+    useLeaderElection: true
+    orgLeader: false
+  tls:
+    enabled: false
+
+chaincode:
+  builder: hyperledger/fabric-ccenv:2.2
+  golang:
+    runtime: go

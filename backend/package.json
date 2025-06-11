@@ -1,0 +1,14 @@
+{
+  "name": "car-registry-backend",
+  "version": "1.0.0",
+  "description": "Backend API for car registry",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "fabric-network": "^2.2.14",
+    "express": "^4.17.1",
+    "body-parser": "^1.19.0"
+  }
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Cars</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0 auto;
+            width: 500px;
+        }
+        li {
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        a {
+            display: block;
+            text-decoration: none;
+            color: #333;
+        }
+        a:hover {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <h1>All Registered Cars</h1>
+    <ul>
+        {% for car in cars %}
+        <li><a href="/car/{{ car.Key }}">{{ car.Key }} - {{ car.Record.model }} - {{ car.Record.owner }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="/">Register a Car</a>
+</body>
+</html>
