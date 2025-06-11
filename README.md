@@ -29,7 +29,7 @@ This project is a Minimum Viable Product (MVP) for a decentralized car registry 
 ### 1. Start Fabric Network
 Navigate to `fabric-network` directory and run:
 ```bash
-./startFabric.sh
+./network.sh
 ```
 This will start the Fabric network and deploy the chaincode.
 
