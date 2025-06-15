@@ -2,7 +2,7 @@
 
 # This is a collection of bash functions used by different scripts
 
-ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer/msp/tlscacerts/tlsca.example.com-cert.pem
 PEER0_ORG1_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
 
 # verify the result of the end-to-end test
@@ -53,7 +53,7 @@ updateAnchorPeers() {
     set +x
   else
     set -x
-    peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx --tls --cafile $ORDERER_CA >&log.txt
+    peer channel update -o orderer:7050 -c $CHANNEL_NAME -f ./channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx --tls --cafile $ORDERER_CA >&log.txt
     res=$?
     set +x
   fi
@@ -117,7 +117,7 @@ instantiateChaincode() {
     set +x
   else
     set -x
-    peer chaincode instantiate -o orderer.example.com:7050 --tls --cafile $ORDERER_CA -C $CHANNEL_NAME -n carcontract -l ${LANGUAGE} -v 1.0 -c '{"Args":[]}' -P "AND ('Org1MSP.peer')" >&log.txt
+    peer chaincode instantiate -o orderer:7050 --tls --cafile $ORDERER_CA -C $CHANNEL_NAME -n carcontract -l ${LANGUAGE} -v 1.0 -c '{"Args":[]}' -P "AND ('Org1MSP.peer')" >&log.txt
     res=$?
     set +x
   fi
@@ -133,7 +133,7 @@ upgradeChaincode() {
   setGlobals $PEER $ORG
 
   set -x
-  peer chaincode upgrade -o orderer.example.com:7050 --tls --cafile $ORDERER_CA -C $CHANNEL_NAME -n carcontract -v 2.0 -c '{"Args":[]}' -P "AND ('Org1MSP.peer','Org2MSP.peer')"
+    peer chaincode upgrade -o orderer:7050 --tls --cafile $ORDERER_CA -C $CHANNEL_NAME -n carcontract -v 2.0 -c '{"Args":[]}' -P "AND ('Org1MSP.peer','Org2MSP.peer')"
   res=$?
   set +x
   cat log.txt
@@ -193,11 +193,11 @@ fetchChannelConfig() {
   echo "Fetching the most recent configuration block for the channel"
   if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
     set -x
-    peer channel fetch config config_block.pb -o orderer.example.com:7050 -c $CHANNEL --cafile $ORDERER_CA
+    peer channel fetch config config_block.pb -o orderer:7050 -c $CHANNEL --cafile $ORDERER_CA
     set +x
   else
     set -x
-    peer channel fetch config config_block.pb -o orderer.example.com:7050 -c $CHANNEL --tls --cafile $ORDERER_CA
+    peer channel fetch config config_block.pb -o orderer:7050 -c $CHANNEL --tls --cafile $ORDERER_CA
     set +x
   fi
 
@@ -282,7 +282,7 @@ chaincodeInvoke() {
     set +x
   else
     set -x
-    peer chaincode invoke -o orderer.example.com:7050 --tls --cafile $ORDERER_CA -C $CHANNEL_NAME -n carcontract $PEER_CONN_PARMS -c '{"Args":["registerCar","CAR12","Honda","Saeed"]}' >&log.txt
+    peer chaincode invoke -o orderer:7050 --tls --cafile $ORDERER_CA -C $CHANNEL_NAME -n carcontract $PEER_CONN_PARMS -c '{"Args":["registerCar","CAR12","Honda","Saeed"]}' >&log.txt
     res=$?
     set +x
   fi

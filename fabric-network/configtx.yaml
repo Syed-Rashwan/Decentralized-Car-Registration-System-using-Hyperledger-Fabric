@@ -29,7 +29,7 @@ Organizations:
         Type: Signature
         Rule: "OR('Org1MSP.admin')"
     AnchorPeers:
-      - Host: peer0.org1.example.com
+      - Host: peer0.example.com
         Port: 7051
 
 Capabilities:
@@ -64,7 +64,7 @@ Application: &ApplicationDefaults
 Orderer: &OrdererDefaults
   OrdererType: solo
   Addresses:
-    - orderer.example.com:7050
+    - orderer:7050
   BatchTimeout: 2s
   BatchSize:
     MaxMessageCount: 10

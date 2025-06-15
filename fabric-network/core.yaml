@@ -5,23 +5,24 @@ logging:
 
 #-- Orderer --
 orderer:
-  address: orderer.example.com:7050
+  address: orderer:7050
 
 # -- Peer --
 peer:
-  id: peer0.org1.example.com
-  address: peer0.org1.example.com:7051
+  id: peer0.example.com
+  address: peer0.example.com:7051
   localMspId: Org1MSP
   mspConfigPath: /etc/hyperledger/fabric/msp
   fileSystemPath: /var/hyperledger/production
   gossip:
-    bootstrap: peer0.org1.example.com:7051
+    bootstrap: peer0.example.com:7051
     useLeaderElection: true
     orgLeader: false
   tls:
-    enabled: false
+    enabled: true
 
 chaincode:
   builder: hyperledger/fabric-ccenv:2.2
   golang:
     runtime: go
+</create_file>

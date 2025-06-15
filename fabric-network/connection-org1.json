@@ -15,7 +15,7 @@
         "Org1": {
             "mspid": "Org1MSP",
             "peers": [
-                "peer0.org1.example.com"
+                "peer0.example.com"
             ],
             "certificateAuthorities": [
                 "ca.example.com"
@@ -23,10 +23,10 @@
         }
     },
     "orderers": {
-        "orderer.example.com": {
+        "orderer": {
             "url": "grpcs://orderer:7050",
             "tlsCACerts": {
-                "path": "../crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt"
+                "path": "../crypto-config/ordererOrganizations/example.com/orderers/orderer/tls/ca.crt"
             },
             "grpcOptions": {
                 "ssl-target-name-override": "orderer",
@@ -35,14 +35,14 @@
         }
     },
     "peers": {
-        "peer0.org1.example.com": {
-            "url": "grpcs://localhost:7051",
+        "peer0.example.com": {
+            "url": "grpcs://peer0.example.com:7051",
             "tlsCACerts": {
-                "path": "../crypto-config/peerOrganizations/example.com/peers/peer0.org1.example.com/tls/ca.crt"
+                "path": "../crypto-config/peerOrganizations/example.com/peers/peer0.example.com/tls/ca.crt"
             },
             "grpcOptions": {
-                "ssl-target-name-override": "localhost",
-                "hostnameOverride": "localhost"
+                "ssl-target-name-override": "peer0.example.com",
+                "hostnameOverride": "peer0.example.com"
             }
         }
     },
