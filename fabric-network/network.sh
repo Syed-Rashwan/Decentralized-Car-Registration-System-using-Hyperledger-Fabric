@@ -4,10 +4,10 @@
 set -e
 
 # Set up environment
-#export FABRIC_CFG_PATH=$PWD/fabric-binaries/config # Remove this line
+export FABRIC_CFG_PATH=$PWD
 
 CHANNEL_NAME="mychannel"
-CHAINCODE_NAME="carregistry"
+CHAINCODE_NAME="carcontract"
 
 function generateCrypto() {
   echo "🔧 Generating crypto material..."
@@ -31,30 +31,27 @@ function startNetwork() {
 }
 
 function createChannel() {
-  echo "🔗 Creating channel..."
-  # Copy crypto material to the CLI container
-  #docker cp crypto-config/peerOrganizations/example.com/peers/peer0.org1.example.com/msp cli:/tmp/peerMSP
-  # Set FABRIC_CFG_PATH and execute the peer channel create command
-  docker exec cli peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls false # Add --tls false
+  echo " Creating channel..."
+  docker exec -e FABRIC_CFG_PATH=/etc/hyperledger/fabric cli peer channel create -o orderer:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls true --cafile /etc/hyperledger/orderer/tls/ca.crt
 }
 
 function joinChannel() {
-  echo "🤝 Joining channel..."
-  docker exec cli peer channel join -b $CHANNEL_NAME.block
+  echo " Joining channel..."
+  docker exec -e FABRIC_CFG_PATH=/etc/hyperledger/fabric cli peer channel join -b $CHANNEL_NAME.block
 }
 
 function installChaincode() {
-  echo "📦 Installing chaincode..."
-  docker exec cli peer chaincode install -n $CHAINCODE_NAME -v 1.0 -p /opt/gopath/src/github.com/chaincode/carregistry -l node
+  echo " Installing chaincode..."
+  docker exec -e FABRIC_CFG_PATH=/etc/hyperledger/fabric cli peer chaincode install -n $CHAINCODE_NAME -v 1.0 -p /opt/gopath/src/github.com/chaincode/carcontract -l node
 }
 
 function instantiateChaincode() {
-  echo "⚡ Instantiating chaincode..."
-  docker exec cli peer chaincode instantiate -o orderer.example.com:7050 -C $CHANNEL_NAME -n $CHAINCODE_NAME -v 1.0 -c '{"Args":["init"]}' -P "AND ('Org1MSP.member')" --tls false
+  echo " Instantiating chaincode..."
+  docker exec -e FABRIC_CFG_PATH=/etc/hyperledger/fabric cli peer chaincode instantiate -o orderer:7050 -C $CHANNEL_NAME -n $CHAINCODE_NAME -v 1.0 -c '{"Args":["init"]}' -P "AND ('Org1MSP.member')" --tls true --cafile /etc/hyperledger/orderer/tls/ca.crt
 }
 
 function networkDown() {
-  echo "🧹 Cleaning up..."
+  echo " Cleaning up..."
   docker-compose down --volumes --remove-orphans
   rm -rf crypto-config channel-artifacts *.block
 }
@@ -63,7 +60,7 @@ function networkDown() {
 if [ "$1" == "down" ]; then
   networkDown
 else
-  networkDown # Add this line to clean up before starting
+  networkDown # Clean up before starting
   generateCrypto
   generateChannelArtifacts
   startNetwork

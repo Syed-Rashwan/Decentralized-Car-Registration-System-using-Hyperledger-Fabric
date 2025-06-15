@@ -6,7 +6,7 @@ const channelName = 'mychannel';
 const chaincodeName = 'carcontract';
 const mspOrg1 = 'Org1MSP';
 
-async function getFabricConnection() {
+async function getFabricConnection(userId = 'appUser', isLocalhost = true) {
   try {
     const ccpPath = path.resolve(__dirname, '..', 'fabric-network', 'connection-org1.json');
     const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
@@ -15,16 +15,16 @@ async function getFabricConnection() {
     const wallet = await Wallets.newFileSystemWallet(walletPath);
     console.log(`Wallet path: ${walletPath}`);
 
-    const identity = await wallet.get('appUser');
+    const identity = await wallet.get(userId);
     if (!identity) {
-      console.log('An identity for the user "appUser" does not exist in the wallet');
+      console.log(`An identity for the user "${userId}" does not exist in the wallet`);
       console.log('Run the registerUser.js application before retrying');
       return;
     }
 
     const gateway = new Gateway();
     await gateway.connect(ccp, {
-      wallet, identity: 'appUser', discovery: { enabled: true, asLocalhost: true }
+      wallet, identity: userId, discovery: { enabled: true, asLocalhost: isLocalhost }, tlsOptions: { trustedRoots: [], verify: false }
     });
 
     const network = await gateway.getNetwork(channelName);
@@ -38,9 +38,9 @@ async function getFabricConnection() {
   }
 }
 
-exports.registerCar = async (carId, model, owner) => {
+exports.registerCar = async (carId, model, owner, userId = 'appUser') => {
   try {
-    const { contract } = await getFabricConnection();
+    const { contract } = await getFabricConnection(userId);
     console.log(`\n--> Submit Transaction: registerCar, function creates the car in the ledger`);
     const result = await contract.submitTransaction('registerCar', carId, model, owner);
     console.log('*** Result: committed');
@@ -51,9 +51,9 @@ exports.registerCar = async (carId, model, owner) => {
   }
 };
 
-exports.queryAllCars = async () => {
+exports.queryAllCars = async (userId = 'appUser') => {
   try {
-    const { contract } = await getFabricConnection();
+    const { contract } = await getFabricConnection(userId);
     console.log('\n--> Evaluate Transaction: queryAllCars, function returns all the cars currently in the ledger');
     const result = await contract.evaluateTransaction('queryAllCars');
     console.log(`*** Result: ${result.toString()}`);
@@ -64,9 +64,9 @@ exports.queryAllCars = async () => {
   }
 };
 
-exports.getCar = async (carId) => {
+exports.getCar = async (carId, userId = 'appUser') => {
   try {
-    const { contract } = await getFabricConnection();
+    const { contract } = await getFabricConnection(userId);
     console.log(`\n--> Evaluate Transaction: getCar, function returns the car with the carId in the ledger`);
     const result = await contract.evaluateTransaction('getCar', carId);
     console.log(`*** Result: ${result.toString()}`);

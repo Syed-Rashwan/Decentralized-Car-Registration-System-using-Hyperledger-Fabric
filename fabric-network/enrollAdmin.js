@@ -13,7 +13,7 @@ async function main() {
         const ccp = JSON.parse(ccpJSON);
 
         // Create a new CA client for interacting with the CA.
-        const caInfo = ccp.certificateAuthorities['ca.Forty4.com'];
+        const caInfo = ccp.certificateAuthorities['ca.example.com'];
         const caTLSCACerts = caInfo.tlsCACerts ? caInfo.tlsCACerts.pem : '';
         const ca = new FabricCAServices(caInfo.url, { trustedRoots: caTLSCACerts, verify: false }, caInfo.caName);
 
@@ -35,7 +35,7 @@ async function main() {
                 certificate: enrollment.certificate,
                 privateKey: enrollment.key.toBytes(),
             },
-            mspId: 'Forty4MSP',
+            mspId: 'Org1MSP',
             type: 'X.509',
         };
         await wallet.put('admin', x509Identity);

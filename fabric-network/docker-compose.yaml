@@ -1,11 +1,8 @@
-version: '3.7'
-
-networks:
-  test:
-
 services:
-  orderer.example.com:
-    container_name: orderer.example.com
+
+# -- Orderer --
+  orderer:
+    container_name: orderer
     image: hyperledger/fabric-orderer:2.2
     environment:
       - FABRIC_LOGGING_SPEC=INFO
@@ -15,18 +12,21 @@ services:
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
-      - ORDERER_GENERAL_TLS_ENABLED=false
-      - FABRIC_CFG_PATH=/etc/hyperledger/fabric # Add this line
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_ROOTCAS=/var/hyperledger/orderer/tls/ca.crt
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric 
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: orderer
     volumes:
       - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
       - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
+      - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls:/var/hyperledger/orderer/tls
     ports:
       - 7050:7050
-    networks:
-      - test
 
+# -- Peer --
   peer0.org1.example.com:
     container_name: peer0.org1.example.com
     image: hyperledger/fabric-peer:2.2
@@ -41,20 +41,20 @@ services:
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
       - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:9443
-      - CORE_PEER_TLS_ENABLED=false
-      - FABRIC_CFG_PATH=/etc/hyperledger/fabric 
+      - CORE_PEER_TLS_ENABLED=true
+      - FABRIC_CFG_PATH=/etc/hyperledger/fabric
     volumes:
       - /var/run/docker.sock:/host/var/run/docker.sock
       - ./crypto-config/peerOrganizations/example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/peerOrganizations/example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: peer node start
     ports:
       - 7051:7051
       - 7052:7052
       - 9443:9443
-    networks:
-      - test
 
+# -- CLI --
   cli:
     container_name: cli
     image: hyperledger/fabric-tools:2.2
@@ -65,11 +65,12 @@ services:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - FABRIC_LOGGING_SPEC=INFO
       - CORE_PEER_ID=cli
-      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051 # Add this line
-      - CORE_PEER_LOCALMSPID=Org1MSP # Add this line
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051 
+      - CORE_PEER_LOCALMSPID=Org1MSP 
       - FABRIC_CFG_PATH=/etc/hyperledger/fabric
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
-      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_ROOTCERT_FILE=/etc/hyperledger/orderer/tls/ca.crt
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: /bin/bash
     volumes:
@@ -78,6 +79,8 @@ services:
       - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
       - ./fabric-binaries/config:/etc/hyperledger/fabric
       - ./crypto-config/peerOrganizations/example.com/users/Admin@example.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/etc/hyperledger/orderer/msp
+      - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls:/etc/hyperledger/orderer/tls
     depends_on:
-      - orderer.example.com
+      - orderer
       - peer0.org1.example.com

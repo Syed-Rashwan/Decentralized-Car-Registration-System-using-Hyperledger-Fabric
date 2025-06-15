@@ -2,7 +2,7 @@
     "name": "car-registry-network",
     "version": "1.0.0",
     "client": {
-        "organization": "Forty4",
+        "organization": "Org1",
         "connection": {
             "timeout": {
                 "peer": {
@@ -12,32 +12,47 @@
         }
     },
     "organizations": {
-        "Forty4": {
-            "mspid": "Forty4MSP",
+        "Org1": {
+            "mspid": "Org1MSP",
             "peers": [
-                "peer0.Forty4.com"
+                "peer0.org1.example.com"
             ],
             "certificateAuthorities": [
-                "ca.Forty4.com"
+                "ca.example.com"
             ]
         }
     },
-    "peers": {
-        "peer0.Forty4.com": {
-            "url": "grpc://localhost:7051",
+    "orderers": {
+        "orderer.example.com": {
+            "url": "grpcs://orderer:7050",
+            "tlsCACerts": {
+                "path": "../crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt"
+            },
             "grpcOptions": {
-                "ssl-target-name-override": "peer0.Forty4.com",
-                "hostnameOverride": "peer0.Forty4.com"
+                "ssl-target-name-override": "orderer",
+                "hostnameOverride": "orderer"
+            }
+        }
+    },
+    "peers": {
+        "peer0.org1.example.com": {
+            "url": "grpcs://localhost:7051",
+            "tlsCACerts": {
+                "path": "../crypto-config/peerOrganizations/example.com/peers/peer0.org1.example.com/tls/ca.crt"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "localhost",
+                "hostnameOverride": "localhost"
             }
         }
     },
     "certificateAuthorities": {
-        "ca.Forty4.com": {
-            "url": "http://localhost:7054",
+        "ca.example.com": {
+            "url": "https://localhost:7054",
             "caName": "ca-org1",
             "httpOptions": {
                 "verify": false
             }
         }
-    }
+   }
 }

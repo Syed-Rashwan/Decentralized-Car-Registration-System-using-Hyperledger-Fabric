@@ -4,6 +4,13 @@ OrdererOrgs:
     EnableNodeOUs: true
     Specs:
       - Hostname: orderer
+    Users:
+      Count: 1
+    # Enable TLS cert generation
+    Template:
+      Count: 1
+    TLS:
+      Enabled: true
 
 PeerOrgs:
   - Name: Org1
@@ -13,3 +20,5 @@ PeerOrgs:
       Count: 1
     Users:
       Count: 1
+    TLS:
+      Enabled: true

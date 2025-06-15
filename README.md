@@ -1,4 +1,4 @@
-# Decentralized Car Registry MVP
+# Decentralized Car Registration MVP
 
 ## Overview
 This project is a Minimum Viable Product (MVP) for a decentralized car registry system built using Hyperledger Fabric, Node.js, and Flask.
@@ -29,7 +29,7 @@ This project is a Minimum Viable Product (MVP) for a decentralized car registry 
 ### 1. Start Fabric Network
 Navigate to `fabric-network` directory and run:
 ```bash
-./startFabric.sh
+./network.sh
 ```
 This will start the Fabric network and deploy the chaincode.
 
@@ -73,7 +73,7 @@ car-registry-mvp/
     ├── requirements.txt         # Python dependencies
     ├── templates/               # HTML templates
     │   ├── index.html           # Car registration form
-    │   ├── cars.html            # List all cars
+    │   ├── cars.html           # List all cars
     │   └── car_detail.html      # Individual car view
     └── static/css/style.css     # Styling
 
@@ -82,5 +82,5 @@ car-registry-mvp/
 - For production use, consider security, error handling, and scalability improvements.
 
 ## Author
-- Rashwan Syed 
+- Rashwan Syed
 - rashwanuzaib2002@gmail.com
