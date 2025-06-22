@@ -129,7 +129,8 @@ function approveAndCommitChaincode() {
     --tls \
     --cafile /etc/hyperledger/orderer/tls/ca.crt \
     --peerAddresses peer0.example.com:7051 \
-    --tlsRootCertFiles /etc/hyperledger/fabric/tls/ca.crt
+    --tlsRootCertFiles /etc/hyperledger/fabric/tls/ca.crt \
+    --signature-policy "AND ('Org1MSP.peer')"
 
   echo "🧾 Committing chaincode definition..."
   docker exec cli peer lifecycle chaincode commit \
@@ -144,7 +145,8 @@ function approveAndCommitChaincode() {
     --tls \
     --cafile /etc/hyperledger/orderer/tls/ca.crt \
     --peerAddresses peer0.example.com:7051 \
-    --tlsRootCertFiles /etc/hyperledger/fabric/tls/ca.crt
+    --tlsRootCertFiles /etc/hyperledger/fabric/tls/ca.crt \
+    --signature-policy "AND ('Org1MSP.peer')"
 }
 
 function initChaincode() {

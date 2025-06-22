@@ -112,7 +112,7 @@ instantiateChaincode() {
   # the "-o" option
   if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
     set -x
-    peer chaincode instantiate -o orderer.example.com:7050 -C $CHANNEL_NAME -n carcontract -l ${LANGUAGE} -v ${VERSION} -c '{"Args":[]}' -P "AND ('Org1MSP.peer')" >&log.txt
+    peer chaincode instantiate -o orderer:7050 -C $CHANNEL_NAME -n carcontract -l ${LANGUAGE} -v ${VERSION} -c '{"Args":[]}' -P "AND ('Org1MSP.peer')" >&log.txt
     res=$?
     set +x
   else
@@ -133,7 +133,7 @@ upgradeChaincode() {
   setGlobals $PEER $ORG
 
   set -x
-    peer chaincode upgrade -o orderer:7050 --tls --cafile $ORDERER_CA -C $CHANNEL_NAME -n carcontract -v 2.0 -c '{"Args":[]}' -P "AND ('Org1MSP.peer','Org2MSP.peer')"
+    peer chaincode upgrade -o orderer:7050 --tls --cafile $ORDERER_CA -C $CHANNEL_NAME -n carcontract -v 2.0 -c '{"Args":[]}' -P "AND ('Org1MSP.peer')"
   res=$?
   set +x
   cat log.txt
